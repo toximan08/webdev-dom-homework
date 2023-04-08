@@ -9,6 +9,7 @@ const nameInputElement = document.getElementById("name-input");
 const commentTxtareaElement = document.getElementById("comment-txtarea");
 const mainForm = document.querySelector(".add-form");
 let quote = "";
+
 let comments = [];
 
 // GET
@@ -39,6 +40,12 @@ const getComments = () => {
 };
 getComments();
 
+
+// Массив комментариев
+
+const comments = [];
+
+
 // Функция очистки полей ввода и блокировки кнопки "Написать"
 
 const delValue = () => {
@@ -60,10 +67,10 @@ const initLikeButtonsListeners = () => {
 
       if (comments[index].isLiked === true) {
         comments[index].isLiked = false;
-        comments[index].likes -= 1;
+        comments[index].counter -= 1;
       } else if (comments[index].isLiked === false) {
         comments[index].isLiked = true;
-        comments[index].likes += 1;
+        comments[index].counter += 1;
       }
       renderComments();
     });
@@ -181,7 +188,9 @@ window.addEventListener("input", () => {
 // Функция добавления нового комментария
 
 addButtonElement.addEventListener("click", () => {
+
   // Функция безопасности от внедрения файлов через input
+  
   function protectInput(someEdit) {
     someEdit = someEdit
       .replaceAll("<", "&lt;")
