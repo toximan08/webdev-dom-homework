@@ -72,6 +72,9 @@ body {
   font-size: 32px;
   overflow-wrap: anywhere;
   white-space: pre-line;
+=======
+.comment-text {
+  font-size: 32px;
 }
 
 .likes {
@@ -144,4 +147,16 @@ body {
 
 .add-form-button:hover {
   opacity: 0.9;
+}
+
+.add-form-button--inactive {
+  background-color: grey;
+}
+
+.add-form-button:hover {
+  opacity: 0.9;
+}
+
+.error {
+  background-color: #e01d0fc2;
 }

@@ -8,7 +8,9 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
+
         <!-- Список создается в рендер функции -->
+
       </ul>
       <div class="add-form">
         <input
@@ -37,5 +39,92 @@
       </div>
     </div>
   </body>
+
   <script src="index.js"></script>
+
+
+  <script>
+    // Объявление переменных
+
+    const addButtonElement = document.getElementById("add-button");
+    const delButtonElement = document.getElementById("delete-button");
+    const listElement = document.getElementById("list");
+    const commentHeaderElement = document.getElementById("comment-header");
+    const commentTextElement = document.getElementById("comment-text");
+    const nameInputElement = document.getElementById("name-input");
+    const commentTxtareaElement = document.getElementById("comment-txtarea");
+    const mainForm = document.querySelector(".add-form");
+
+    // Работа с датой комментариев
+
+    const date = new Date();
+    let month = date.getMonth();
+    if (month < 10) {
+      month = `0` + month;
+    }
+    const commentDate = date.getDate() + `.` + month + `.` + date.getFullYear();
+    const commentTime = date.getHours() + `:` + date.getMinutes();
+
+    // Расширенная валидация
+
+    window.addEventListener("input", () => {
+      if (nameInputElement.value !== "" && commentTxtareaElement.value !== "") {
+        addButtonElement.classList.remove("add-form-button--inactive");
+        addButtonElement.disabled = false;
+      }
+    });
+
+    // Функция очистки полей ввода и блокировки кнопки "Написать"
+
+    const delValue = () => {
+      nameInputElement.value = "";
+      commentTxtareaElement.value = "";
+      addButtonElement.classList.add("add-form-button--inactive");
+      addButtonElement.disabled = true;
+    };
+
+    // Функция добавления нового комментария
+
+    const addNewComment = () => {
+      const oldListHtml = listElement.innerHTML;
+      listElement.innerHTML =
+        oldListHtml +
+        `<li class="comment">
+          <div class="comment-header">
+            <div>${nameInputElement.value}</div>
+            <div>${commentDate} ${commentTime}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${commentTxtareaElement.value}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+        </li>`;
+      delValue();
+    };
+    addButtonElement.addEventListener("click", addNewComment);
+
+    // Добавление нового комментария посредством нажатия Enter
+
+    mainForm.addEventListener("keyup", (e) => {
+      if (e.code === "Enter") {
+        addButtonElement.click();
+        delValue();
+      }
+    });
+
+    // Удаление последнего комментария
+
+    delButtonElement.addEventListener("click", () => {
+      if (listElement.lastElementChild) {
+        listElement.lastElementChild.remove();
+      }
+    });
+  </script>
 </html>
