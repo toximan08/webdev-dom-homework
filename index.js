@@ -91,8 +91,10 @@ const initEditButtonsListeners = () => {
   for (const editButtonElement of editButtonsElements) {
     editButtonElement.addEventListener("click", () => {
       const index = editButtonElement.dataset.index;
+      const editTextArea = document.querySelector(".area-text");
       if (comments[index].isEdit === true) {
         comments[index].isEdit = false;
+        comments[index].text = editTextArea.value;
       } else if (comments[index].isEdit === false) {
         comments[index].isEdit = true;
       }
@@ -123,7 +125,7 @@ const renderComments = () => {
                         .replaceAll("QUOTE_END", "</div>")}</div>`
                     : ``
                 }
-              ${comment.text}`
+            ${comment.isReplied ? "" : comment.text}`
             }
           </div>
           <div class="comment-footer">
