@@ -9,29 +9,35 @@ const nameInputElement = document.getElementById("name-input");
 const commentTxtareaElement = document.getElementById("comment-txtarea");
 const mainForm = document.querySelector(".add-form");
 let quote = "";
+let comments = [];
 
-// Массив комментариев
+// GET
 
-const comments = [
-  {
-    name: "Глеб Фокин",
-    date: "12.02.22, 12:18",
-    text: "Это будет первый комментарий на этой странице",
-    counter: "3",
-    isLiked: true,
-    isEdit: false,
-    isReplied: false,
-  },
-  {
-    name: "Варвара Н.",
-    date: "13.02.22, 19:22",
-    text: "Мне нравится как оформлена эта страница! ❤",
-    counter: "75",
-    isLiked: true,
-    isEdit: false,
-    isReplied: false,
-  },
-];
+const getComments = () => {
+  fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
+    method: "GET",
+  }).then((response) => {
+    const jsonPromise = response.json();
+
+    jsonPromise.then((responseData) => {
+      const appComments = responseData.comments.map((comment) => {
+        return {
+          name: comment.author.name,
+          date: new Date(comment.date).toLocaleString("ru-RU", dateOptions),
+          text: comment.text,
+          likes: comment.likes,
+          isLiked: false,
+          isEdit: false,
+          isReplied: false,
+        };
+      });
+
+      comments = appComments;
+      renderComments();
+    });
+  });
+};
+getComments();
 
 // Функция очистки полей ввода и блокировки кнопки "Написать"
 
@@ -54,10 +60,10 @@ const initLikeButtonsListeners = () => {
 
       if (comments[index].isLiked === true) {
         comments[index].isLiked = false;
-        comments[index].counter -= 1;
+        comments[index].likes -= 1;
       } else if (comments[index].isLiked === false) {
         comments[index].isLiked = true;
-        comments[index].counter += 1;
+        comments[index].likes += 1;
       }
       renderComments();
     });
@@ -133,7 +139,7 @@ const renderComments = () => {
         comment.isEdit ? `Сохранить` : `Редактировать`
       }</button>
             <div class="likes">
-              <span class="likes-counter">${comment.counter}</span>
+              <span class="likes-likes">${comment.likes}</span>
               <button data-index="${index}" class="${
         comment.isLiked ? "like-button -active-like" : "like-button"
       }"></button>
@@ -175,43 +181,37 @@ window.addEventListener("input", () => {
 // Функция добавления нового комментария
 
 addButtonElement.addEventListener("click", () => {
-  if (quote !== "") {
-    comments.push({
-      name: nameInputElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll("&", "&amp;")
-        .replaceAll('"', "&quot;"),
+  // POST
+
+  function protectInput(someEdit) {
+    someEdit = someEdit
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;");
+    return someEdit;
+  }
+
+  fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
+    method: "POST",
+    body: JSON.stringify({
+      name: protectInput(nameInputElement.value),
+      text: protectInput(commentTxtareaElement.value),
       date: date,
-      text: commentTxtareaElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll("&", "&amp;")
-        .replaceAll('"', "&quot;"),
-      counter: 0,
-      isLiked: false,
-      isEdit: false,
-      isReplied: true,
-    });
-  } else {
-    comments.push({
-      name: nameInputElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll("&", "&amp;")
-        .replaceAll('"', "&quot;"),
-      date: date,
-      text: commentTxtareaElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll("&", "&amp;")
-        .replaceAll('"', "&quot;")
-        .replaceAll('"', "&quot;"),
-      counter: 0,
+      likes: 0,
       isLiked: false,
       isEdit: false,
       isReplied: false,
+    }),
+  }).then((response) => {
+    const jsonPromise = response.json();
+
+    jsonPromise.then((responseData) => {
+      comments = responseData;
+      getComments();
+      renderComments();
     });
-  }
+  });
 
   renderComments();
   delValue();
