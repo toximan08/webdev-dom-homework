@@ -3,13 +3,23 @@
 const addButtonElement = document.getElementById("add-button");
 const delButtonElement = document.getElementById("delete-button");
 const listElement = document.getElementById("list");
-const commentHeaderElement = document.getElementById("comment-header");
-const commentTextElement = document.getElementById("comment-text");
 const nameInputElement = document.getElementById("name-input");
 const commentTxtareaElement = document.getElementById("comment-txtarea");
 const mainForm = document.querySelector(".add-form");
 let quote = "";
 let comments = [];
+
+// Работа с датой комментариев
+
+const dateOptions = {
+  year: "2-digit",
+  month: "numeric",
+  day: "numeric",
+  timezone: "UTC",
+  hour: "numeric",
+  minute: "2-digit",
+};
+const date = new Date().toLocaleString("ru-RU", dateOptions);
 
 // GET
 
@@ -131,7 +141,7 @@ const renderComments = () => {
                         .replaceAll("QUOTE_END", "</div>")}</div>`
                     : ``
                 }
-            ${comment.isReplied ? "" : comment.text}`
+            ${comment.text}`
             }
           </div>
           <div class="comment-footer">
@@ -139,7 +149,7 @@ const renderComments = () => {
         comment.isEdit ? `Сохранить` : `Редактировать`
       }</button>
             <div class="likes">
-              <span class="likes-likes">${comment.likes}</span>
+              <span class="likes-counter">${comment.likes}</span>
               <button data-index="${index}" class="${
         comment.isLiked ? "like-button -active-like" : "like-button"
       }"></button>
@@ -157,18 +167,6 @@ const renderComments = () => {
 
 renderComments();
 
-// Работа с датой комментариев
-
-const dateOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  timezone: "UTC",
-  hour: "numeric",
-  minute: "2-digit",
-};
-const date = new Date().toLocaleString("ru-RU", dateOptions);
-
 // Расширенная валидация
 
 window.addEventListener("input", () => {
@@ -185,7 +183,6 @@ addButtonElement.addEventListener("click", () => {
   function protectInput(someEdit) {
     someEdit = someEdit
       .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
       .replaceAll("&", "&amp;")
       .replaceAll('"', "&quot;");
     return someEdit;
@@ -205,9 +202,7 @@ addButtonElement.addEventListener("click", () => {
       isReplied: false,
     }),
   }).then((response) => {
-    const jsonPromise = response.json();
-
-    jsonPromise.then((responseData) => {
+    response.json().then((responseData) => {
       comments = responseData;
       getComments();
       renderComments();
