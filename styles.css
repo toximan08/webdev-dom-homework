@@ -53,8 +53,7 @@ body {
 .comment-footer {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .comment-body {
@@ -62,18 +61,14 @@ body {
   margin-bottom: 32px;
 }
 
-.quote {
-  background-color: #fff;
-  box-sizing: border-box;
-  font-size: 16px;
-  color: black;
-  padding: 5px;
+.quote,
+.area-text {
+  width: 100%;
+  height: 80px;
 }
 
 .comment-text {
   font-size: 32px;
-  overflow-wrap: anywhere;
-  white-space: pre-line;
 }
 
 .likes {
@@ -135,11 +130,6 @@ body {
   gap: 10px;
 }
 
-.area-text {
-  width: 100%;
-  height: 80px;
-}
-
 .add-form-button {
   margin-top: 24px;
   font-size: 24px;
@@ -156,5 +146,5 @@ body {
 
 .edit-button {
   margin-top: 0px;
-  margin-right: 20px;
+  margin-right: 10px;
 }

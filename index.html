@@ -8,6 +8,7 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
+        <!-- Список создается в рендер функции -->
       </ul>
       <div class="add-form">
         <input
@@ -20,11 +21,17 @@
           id="comment-txtarea"
           type="textarea"
           class="add-form-text"
-          placeholder="Введите ваш коментарий"
+          placeholder="Введите ваш комментарий"
           rows="4"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button" id="add-button">Написать</button>
+          <button
+            class="add-form-button add-form-button--inactive"
+            id="add-button"
+            disabled
+          >
+            Написать
+          </button>
           <button class="add-form-button" id="delete-button">Удалить</button>
         </div>
       </div>

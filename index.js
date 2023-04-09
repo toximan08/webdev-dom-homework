@@ -7,6 +7,7 @@ const nameInputElement = document.getElementById("name-input");
 const commentTxtareaElement = document.getElementById("comment-txtarea");
 const mainForm = document.querySelector(".add-form");
 let quote = "";
+
 let comments = [];
 
 // Работа с датой комментариев
@@ -180,6 +181,7 @@ window.addEventListener("input", () => {
 
 addButtonElement.addEventListener("click", () => {
   // Функция безопасности от внедрения файлов через input
+
   function protectInput(someEdit) {
     someEdit = someEdit
       .replaceAll("<", "&lt;")
