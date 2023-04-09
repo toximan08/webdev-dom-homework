@@ -132,10 +132,12 @@ body {
 .add-form-row {
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 }
 
 .area-text {
   width: 100%;
+  height: 80px;
 }
 
 .add-form-button {
