@@ -186,7 +186,6 @@ addButtonElement.addEventListener("click", () => {
   function protectInput(someEdit) {
     someEdit = someEdit
       .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
       .replaceAll("&", "&amp;")
       .replaceAll('"', "&quot;");
     return someEdit;

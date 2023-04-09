@@ -53,6 +53,8 @@ body {
 .comment-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .comment-body {
@@ -132,6 +134,10 @@ body {
   justify-content: flex-end;
 }
 
+.area-text {
+  width: 100%;
+}
+
 .add-form-button {
   margin-top: 24px;
   font-size: 24px;
@@ -144,4 +150,9 @@ body {
 
 .add-form-button:hover {
   opacity: 0.9;
+}
+
+.edit-button {
+  margin-top: 0px;
+  margin-right: 20px;
 }
