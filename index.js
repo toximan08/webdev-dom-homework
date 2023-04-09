@@ -129,9 +129,9 @@ const renderComments = () => {
                     ? `<div class="quote">${quote
                         .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
                         .replaceAll("QUOTE_END", "</div>")}</div>`
-                    : ``
+                    : `${comment.text}`
                 }
-            ${comment.isReplied ? "" : comment.text}`
+            `
             }
           </div>
           <div class="comment-footer">
@@ -191,27 +191,49 @@ addButtonElement.addEventListener("click", () => {
     return someEdit;
   }
 
-  fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
-    method: "POST",
-    body: JSON.stringify({
-      name: protectInput(nameInputElement.value),
-      text: protectInput(commentTxtareaElement.value),
-      date: date,
-      likes: 0,
-      isLiked: false,
-      isEdit: false,
-      isReplied: false,
-    }),
-  }).then((response) => {
-    const jsonPromise = response.json();
+  if (quote !== "") {
+    fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
+      method: "POST",
+      body: JSON.stringify({
+        name: protectInput(nameInputElement.value),
+        text: protectInput(commentTxtareaElement.value),
+        date: date,
+        likes: 0,
+        isLiked: false,
+        isEdit: false,
+        isReplied: true,
+      }),
+    }).then((response) => {
+      const jsonPromise = response.json();
 
-    jsonPromise.then((responseData) => {
-      comments = responseData;
-      getComments();
-      renderComments();
+      jsonPromise.then((responseData) => {
+        comments = responseData;
+        getComments();
+        renderComments();
+      });
     });
-  });
+  } else {
+    fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
+      method: "POST",
+      body: JSON.stringify({
+        name: protectInput(nameInputElement.value),
+        text: protectInput(commentTxtareaElement.value),
+        date: date,
+        likes: 0,
+        isLiked: false,
+        isEdit: false,
+        isReplied: false,
+      }),
+    }).then((response) => {
+      const jsonPromise = response.json();
 
+      jsonPromise.then((responseData) => {
+        comments = responseData;
+        getComments();
+        renderComments();
+      });
+    });
+  }
   renderComments();
   delValue();
 });
