@@ -244,8 +244,7 @@ const handlePostClick = () => {
       if (error.message === "Сервер упал, повторите попытку позже") {
         handlePostClick();
       } else {
-        alert(error);
-        console.warn(error);
+        alert("Похоже у Вас пропал интернет, проверьте подключение");
       }
     });
 
