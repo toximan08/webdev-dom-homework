@@ -1,54 +1,24 @@
-import { renderComments } from "./render.js";
-import {
-  date,
-  dateOptions,
-  addFormElement,
-  container,
-  nameInputElement,
-  commentTxtareaElement,
-  addingComment,
-} from "./flex-vars.js";
-import { protectInput, handlePostClick } from "./applied-functions.js";
-let comments = [];
+import { date } from "./render.js";
+const hostComments =
+  "https://wedev-api.sky.pro/api/v2/gladyshko-fedor/comments";
+const hostAuth = "https://wedev-api.sky.pro/api/user";
 
 // GET
-
 const getComments = () => {
-  return fetch(
-    "https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments",
-    {
-      method: "GET",
-    }
-  )
-    .then((response) => {
-      return response.json();
-    })
-    .then((responseData) => {
-      const appComments = responseData.comments.map((comment) => {
-        return {
-          name: comment.author.name,
-          date: new Date(comment.date).toLocaleString("ru-RU", dateOptions),
-          text: comment.text,
-          likes: comment.likes,
-          isLiked: false,
-          isEdit: false,
-          isReplied: false,
-        };
-      });
-
-      comments = appComments;
-      renderComments(comments);
-    });
+  return fetch(hostComments, {
+    method: "GET",
+  }).then((response) => {
+    return response.json();
+  });
 };
 
 // POST
 
-const postComments = () => {
-  fetch("https://webdev-hw-api.vercel.app/api/v1/gladyshko-fedor/comments", {
+const postComments = ({ text, token }) => {
+  return fetch(hostComments, {
     method: "POST",
     body: JSON.stringify({
-      name: protectInput(nameInputElement.value),
-      text: protectInput(commentTxtareaElement.value),
+      text,
       date: date,
       likes: 0,
       isLiked: false,
@@ -56,36 +26,67 @@ const postComments = () => {
       isReplied: false,
       // forceError: true,
     }),
-  })
-    .then((response) => {
-      if (response.status === 201) {
-        return response.json();
-      } else if (response.status === 500) {
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    switch (response.status) {
+      case 500:
         throw new Error("Сервер упал, повторите попытку позже");
-        // return Promise.reject("Сервер упал.");
-      } else if (response.status === 400) {
+      case 400:
         throw new Error("Имя и комментарий должны быть не короче 3 символов");
-      }
-    })
-    .then((responseData) => {
-      comments = responseData;
-      return getComments();
-    })
-    .then((data) => {
-      addFormElement.style.display = "flex";
-      container.removeChild(addingComment);
-    })
-    .catch((error) => {
-      addFormElement.style.display = "flex";
-      container.removeChild(addingComment);
-      if (error.message === "Сервер упал, повторите попытку позже") {
-        handlePostClick();
-      } else {
-        alert("Похоже у Вас пропал интернет, проверьте подключение");
-      }
-    });
-
-  renderComments(comments);
+      case 401:
+        throw new Error("Нет авторизации");
+      case 201:
+        return response.json();
+    }
+  });
 };
 
-export { getComments, postComments, comments };
+// DELETE
+const deleteComments = ({ token, id }) => {
+  return fetch(hostComments + "/" + id, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+};
+
+const loginUser = ({ login, password }) => {
+  return fetch(hostAuth + "/login", {
+    method: "POST",
+    body: JSON.stringify({
+      login,
+      password,
+    }),
+  }).then((response) => {
+    switch (response.status) {
+      case 400:
+        throw new Error("Неверный логин или пароль");
+      case 201:
+        return response.json();
+    }
+  });
+};
+const registerUser = ({ login, name, password }) => {
+  return fetch(hostAuth, {
+    method: "POST",
+    body: JSON.stringify({
+      login,
+      name,
+      password,
+    }),
+  }).then((response) => {
+    switch (response.status) {
+      case 400:
+        throw new Error("Пользователь с таким логином уже существует");
+      case 201:
+        return response.json();
+    }
+  });
+};
+
+export { getComments, postComments, deleteComments, loginUser, registerUser };
