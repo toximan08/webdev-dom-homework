@@ -33,8 +33,10 @@ const postComments = ({ text, token }) => {
     switch (response.status) {
       case 500:
         throw new Error("Сервер упал, повторите попытку позже");
+
       case 400:
         throw new Error("Имя и комментарий должны быть не короче 3 символов");
+
       case 401:
         throw new Error("Нет авторизации");
       case 201:
