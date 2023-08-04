@@ -67,7 +67,6 @@ export function renderAuthComponent({
           password: password,
         })
           .then((user) => {
-            console.log(user.user);
             setToken(`Bearer ${user.user.token}`);
             setUser("currentUser");
             fetchCommentsAndRender();
