@@ -1,42 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Проект "Комменты"</title>
+    <title>Проект "Комментарии"</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
-    <div class="container">
-      <ul class="comments" id="list">
-        <!-- Список создается в рендер функции -->
-      </ul>
-      <div class="add-form">
-        <input
-          type="text"
-          id="name-input"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea
-          type="textarea"
-          id="comment-txtarea"
-          class="add-form-text"
-          placeholder="Введите ваш комментарий"
-          rows="4"
-        ></textarea>
-        <div class="add-form-row">
-          <button
-            class="add-form-button add-form-button--inactive"
-            id="add-button"
-            disabled
-          >
-            Написать
-          </button>
-          <button class="add-form-button" id="delete-button">Удалить</button>
-        </div>
-      </div>
-    </div>
+    <div id="app"></div>
   </body>
 
-  <script src="index.js"></script>
+  <script type="module" src="index.js"></script>
 </html>
